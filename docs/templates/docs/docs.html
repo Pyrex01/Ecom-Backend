@@ -1,0 +1,348 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- Compiled and minified CSS -->
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"
+		/>
+
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+		<title>Document</title>
+	</head>
+	<body class="blue lighten-1">
+		<div class="container">
+			<!-- ---------------------------------------------------------------------------------------------------------------- -->
+			<div class="row">
+				<div class="card lime lighten-5">
+					<div class="card-content white-text">
+						<span class="card-title blue-grey-text text-darken-4">
+							{{path}}/user/signup/</span
+						>
+						<div class="card-action"></div>
+						<table class="blue-grey-text text-darken-4 highlight">
+							<tr>
+								<th>Method</th>
+								<th>Request</th>
+							</tr>
+							<tr></tr>
+							<tr>
+								<td>
+									<p
+										class="
+											waves-effect waves-light
+											red
+											darken-3
+											btn
+											white-text
+										"
+									>
+										POST
+									</p>
+								</td>
+								<td>
+									First_Name, <br />Second_Name, <br />Email,
+									<br />Gender(1 for male ,2 for female , rest
+									need to be decided), <br />Photo(string of
+									base64
+									<span class="green-text">OPTIONAL</span> ),
+									<br />password, <br />Phone
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p
+										class="
+											waves-effect waves-light
+											teal
+											darken-4
+											btn
+											white-text
+										"
+									>
+										GET
+									</p>
+								</td>
+								<td><span class="red-text">ERROR</span></td>
+							</tr>
+						</table>
+						<div class="card-action"></div>
+						<div class="card-action"></div>
+						<table class="blue-grey-text text-darken-4 highlight">
+							<tr>
+								<th>STATUS</th>
+								<th>RESPONSE</th>
+							</tr>
+							<tr>
+								<td class="blue-text bold">226</td>
+								<td>Email already in use</td>
+							</tr>
+							<tr>
+								<td class="blue-text bold">201</td>
+								<td>{signup_token:"some random value"}</td>
+							</tr>
+							<tr>
+								<td class="blue-text bold">400</td>
+								<td>wrong data sent to server</td>
+							</tr>
+						</table>
+						<div class="card-action"></div>
+						<p class="blue-grey-text text-darken-4">
+							this is where users are being registered next sent
+							otp with signup_token which you receive
+						</p>
+					</div>
+				</div>
+			</div>
+			<!-- ---------------------------------------------------------------------------------------------------------------- -->
+
+			<div class="row">
+				<div class="card lime lighten-5">
+					<div class="card-content white-text">
+						<span class="card-title blue-grey-text text-darken-4">
+							{{path}}/user/confirm/</span
+						>
+						<div class="card-action"></div>
+						<table class="blue-grey-text text-darken-4 highlight">
+							<tr>
+								<th>Method</th>
+								<th>Request</th>
+							</tr>
+							<tr></tr>
+							<tr>
+								<td>
+									<p
+										class="
+											waves-effect waves-light
+											red
+											darken-3
+											btn
+											white-text
+										"
+									>
+										POST
+									</p>
+								</td>
+								<td>
+									token,<br />
+									otp
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p
+										class="
+											waves-effect waves-light
+											teal
+											darken-4
+											btn
+											white-text
+										"
+									>
+										GET
+									</p>
+								</td>
+								<td><span class="red-text">ERROR</span></td>
+							</tr>
+						</table>
+						<div class="card-action"></div>
+						<div class="card-action"></div>
+						<table class="blue-grey-text text-darken-4 highlight">
+							<tr>
+								<th>STATUS</th>
+								<th>RESPONSE</th>
+							</tr>
+							<tr>
+								<td class="blue-text bold">202</td>
+								<td>
+									this will return nothing meaning user is
+									verified
+								</td>
+							</tr>
+							<tr>
+								<td class="blue-text bold">410</td>
+								<td>otp expired</td>
+							</tr>
+							<tr>
+								<td class="blue-text bold">400</td>
+								<td>wrong data sent to server</td>
+							</tr>
+						</table>
+						<div class="card-action"></div>
+						<p class="blue-grey-text text-darken-4">
+							this is where you sent otp with token received
+							during signup and after this user is verified
+						</p>
+					</div>
+				</div>
+			</div>
+			<!-- ---------------------------------------------------------------------------------------------------------------- -->
+			<div class="row">
+				<div class="card lime lighten-5">
+					<div class="card-content white-text">
+						<span class="card-title blue-grey-text text-darken-4">
+							{{path}}/user/login/</span
+						>
+						<div class="card-action"></div>
+						<table class="blue-grey-text text-darken-4 highlight">
+							<tr>
+								<th>Method</th>
+								<th>Request</th>
+							</tr>
+							<tr></tr>
+							<tr>
+								<td>
+									<p
+										class="
+											waves-effect waves-light
+											red
+											darken-3
+											btn
+											white-text
+										"
+									>
+										POST
+									</p>
+								</td>
+								<td>
+									Email,<br />
+									password
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p
+										class="
+											waves-effect waves-light
+											teal
+											darken-4
+											btn
+											white-text
+										"
+									>
+										GET
+									</p>
+								</td>
+								<td><span class="red-text">ERROR</span></td>
+							</tr>
+						</table>
+						<div class="card-action"></div>
+						<div class="card-action"></div>
+						<table class="blue-grey-text text-darken-4 highlight">
+							<tr>
+								<th>STATUS</th>
+								<th>RESPONSE</th>
+							</tr>
+							<tr>
+								<td class="blue-text bold">400</td>
+								<td>wrong data sent to server</td>
+							</tr>
+							<tr>
+								<td class="blue-text bold">202</td>
+								<td>
+									login_token,<br />First_name,<br />Second_Name,<br />Photo
+								</td>
+							</tr>
+							<tr>
+								<td class="blue-text bold">403</td>
+								<td>wrong user name and password</td>
+							</tr>
+						</table>
+						<div class="card-action"></div>
+						<p class="blue-grey-text text-darken-4">
+							this is where you sent otp with token received
+							during signup and after this user is verified
+						</p>
+					</div>
+				</div>
+			</div>
+			<!-- ---------------------------------------------------------------------------------------------------------------- -->
+			<div class="row">
+				<div class="card lime lighten-5">
+					<div class="card-content white-text">
+						<span class="card-title blue-grey-text text-darken-4">
+							{{path}}/user/logout/</span
+						>
+						<div class="card-action"></div>
+						<table class="blue-grey-text text-darken-4 highlight">
+							<tr>
+								<th>Method</th>
+								<th>Header</th>
+							</tr>
+							<tr></tr>
+							<tr>
+								<td>
+									<p
+										class="
+											waves-effect waves-light
+											red
+											darken-3
+											btn
+											white-text
+										"
+									>
+										POST
+									</p>
+								</td>
+								<td>
+									Authorization : Token
+									followed_by_random_login_token_string
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p
+										class="
+											waves-effect waves-light
+											teal
+											darken-4
+											btn
+											white-text
+										"
+									>
+										GET
+									</p>
+								</td>
+								<td><span class="red-text">ERROR</span></td>
+							</tr>
+						</table>
+						<div class="card-action"></div>
+						<div class="card-action"></div>
+						<table class="blue-grey-text text-darken-4 highlight">
+							<tr>
+								<th>STATUS</th>
+								<th>RESPONSE</th>
+							</tr>
+							<tr>
+								<td class="blue-text bold">200</td>
+								<td>
+									no response will be given meaning loged out
+								</td>
+							</tr>
+
+							<tr>
+								<td class="blue-text bold">401</td>
+								<td>
+									{"detail":"Invalid token."} this will come
+									when token is wrong
+								</td>
+							</tr>
+						</table>
+						<div class="card-action"></div>
+						<p class="blue-grey-text text-darken-4">
+							sent Authorization header with value as Token plus
+							space plus token in header and responses will come
+							as follow
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
