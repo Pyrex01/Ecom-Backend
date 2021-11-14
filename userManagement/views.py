@@ -6,6 +6,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.core import mail
 from django.conf.global_settings import EMAIL_HOST_USER
+from django.template.loader import render_to_string 
+from django.utils.html import strip_tags
 from .models import *
 import random
 import datetime
@@ -24,13 +26,24 @@ def signup(request):
         user = UnVerifiedUser(**request.data)
         user.OTP=random.randint(99999,999999)
         print("------------------------------------ OTP:",user.OTP,"----------------------------")
-        email = mail.EmailMessage(subject="Django Otp verification",body=f"you have signed up to shoping bazar here is your otp {user.OTP}",from_email=EMAIL_HOST_USER,to=[user.Email])
+        html_content = render_to_string("userManagement/otptemp.html",{"OTP":user.OTP,"email":user.Email})
+        content = strip_tags(html_content)
+        email = mail.EmailMultiAlternatives(subject="Shoping Bazar Email Verification",from_email=EMAIL_HOST_USER,to=[user.Email],body=content)
+        email.attach_alternative(html_content,"text/html")
         email.send(fail_silently=False)
         user.save()
         return Response(data={"signup_token":str(user.id)},status=status.HTTP_201_CREATED)
     except KeyError:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+
+def senddemo():
+    html_content = render_to_string("userManagement/otptemp.html",{"OTP":456123,"email":"khanshafique.ahamed@gmail.com"})
+    content = strip_tags(html_content)
+    email = mail.EmailMultiAlternatives(subject="Shoping Bazar Email Verification",from_email=EMAIL_HOST_USER,to=["khanshafique.ahamed@gmail.com"],body=content)
+    email.attach_alternative(html_content,"text/html")
+    email.send(fail_silently=False)
 
 @api_view(['POST'])
 def confirmOTP(request):
