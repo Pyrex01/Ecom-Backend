@@ -15,7 +15,18 @@ import random
 import datetime
 
 
-
+@swagger_auto_schema(
+    method = 'post',
+    operation_description="this end point to take users data and create a unverified user",
+    manual_parameters=[ 
+        Parameter("First_Name","in request",type="string",required=True),
+        Parameter("Second_Name","in request",type="string",required=True),
+        Parameter("Email","in request",type="string",required=True),
+        Parameter("password","in request",type="string",required=True),
+        Parameter("Gender","in request","1 for male 2 for female and more to come",type="integer",required=True),
+        Parameter("Phone","in request",type="integer | string"),
+        Parameter("Photo","in request","photo should come in base 64 format of string",type="string")],
+    responses={201:"user created and OTP is sent",226:"user with same email already exist",400:"bad request"})
 @api_view(['POST'])
 def signup(request):
     try:

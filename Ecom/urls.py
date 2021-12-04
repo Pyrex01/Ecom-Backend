@@ -24,6 +24,6 @@ urlpatterns = [
    path("docs(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name='schema-json'),
    path("docs/", schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
    path("user/",include("userManagement.urls")),
-   path("",include("store.urls")),
-   path("",include("addressCollection.urls"))
+   path("store/",include("store.urls")),
+   path("resident/",include("addressCollection.urls"))
 ]
