@@ -48,3 +48,9 @@ Thumbs.db
 *.mov
 *.wmv
 
+*.ini
+
+**/migrations
+*.DS_Store
+**/__pycache__
+**/.DS_Store

@@ -1,3 +1,5 @@
+from typing import Tuple
+from pkg_resources import require
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from store.pagination import ListPage
@@ -8,6 +10,9 @@ from rest_framework.response import Response
 from store.serializer import ItemsInList , SingleItem
 from addressCollection.models import Address
 import random
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.openapi import Parameter
+
 class getItems(ListAPIView):
     queryset = Items.objects.all()
     serializer_class = ItemsInList
@@ -33,6 +38,12 @@ class getSortItems(ListAPIView):
                 queryset = queryset.order_by("-Price")
         return queryset
 
+@swagger_auto_schema(method='get',
+operation_description="this is to get single item with all its detail to show user ",
+manual_parameters= [Parameter('product_ID', "in request",'unique id of product slected by user to view', 
+type='interger')],
+require=True,
+responses={200:"returns product with all its details to show",400:"item does not exist"})
 @api_view(['GET'])
 def getItem(request):
     try:
@@ -43,11 +54,24 @@ def getItem(request):
         return Response(status=404)
 
 
+
+
+
+
+
+
+@swagger_auto_schema(operation_description="for users to place order they must be loged in",method='get',
+manual_parameters=[ Parameter("itemID","in request","item's id selected by user",type="integer",required=True),
+                    Parameter("quantity","in request","how many amount of item by user to order",type="integer",required=True),
+                    Parameter("addressID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True)],
+responses={200:"order placed",400:"bad request or quantitiy is not that much"})
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 def doOrder(request):
     item = Items.objects.get(pk=request.GET["itemID"])
     quantity = request.GET["quantity"]
+    if item.Quantity < quantity:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     address = request.GET["addressID"]
     item.Quantity = item.Quantity = quantity
     item.save()

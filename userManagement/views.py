@@ -9,6 +9,7 @@ from django.conf.global_settings import EMAIL_HOST_USER
 from django.template.loader import render_to_string 
 from django.utils.html import strip_tags
 from .models import *
+from drf_yasg.utils import swagger_auto_schema
 import random
 import datetime
 
