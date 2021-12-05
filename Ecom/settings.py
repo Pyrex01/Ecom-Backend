@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'userManagement.apps.UsermanagementConfig',
     'store.apps.StoreConfig',
     'addressCollection.apps.AddresscollectionConfig',
-    'docs.apps.DocsConfig',
     'drf_yasg',
 ]
 
