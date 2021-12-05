@@ -5,24 +5,37 @@ from rest_framework.generics import ListAPIView
 from store.pagination import ListPage
 from store.models import *
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.decorators import api_view ,authentication_classes
+from rest_framework.decorators import action, api_view ,authentication_classes
 from rest_framework.response import Response
 from store.serializer import ItemsInList , SingleItem
 from addressCollection.models import Address
 import random
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema 
 from drf_yasg.openapi import Parameter
 
 class getItems(ListAPIView):
     queryset = Items.objects.all()
     serializer_class = ItemsInList
     pagination_class = ListPage
-
 class getSortItems(ListAPIView):
     queryset = Items.objects.all()
     queryset = queryset.exclude(Quantity=0)
     serializer_class = ItemsInList
     pagination_class = ListPage
+
+    @swagger_auto_schema(method='get',
+    operation_description="this is to get single item with all its detail to show user ",
+    manual_parameters= [
+        Parameter('categories', "in request",'sort by categorie',type='string'),
+        Parameter('sub_categorie', "in request",'sort by sub-categorie',type='string'),
+        Parameter('Price', "in request",'this is for sort by price possible option is -1 for low to high 1 for high to low ',type='integer'),
+        ],
+    require=True,
+    responses={200:"page of sorted products",404:"no product available with this sort",400:"bad request"})
+    @action(methods=['get'],detail=False)
+    def get(self,request,**kwargs):
+        return super().get(request,**kwargs)
+
     def get_queryset(self):
         queryset = Items.objects.all()
         data = self.request.GET
@@ -34,9 +47,10 @@ class getSortItems(ListAPIView):
         if "by_price" in data.keys():
             if data["by_price"]==1:
                 queryset = queryset.order_by("Price")
-            if data["by_price"]==0:
+            if data["by_price"]==-1:
                 queryset = queryset.order_by("-Price")
         return queryset
+
 
 @swagger_auto_schema(method='get',
 operation_description="this is to get single item with all its detail to show user ",
@@ -52,12 +66,6 @@ def getItem(request):
         return Response(data=item.data,status=200)
     except Items.DoesNotExist as E:
         return Response(status=404)
-
-
-
-
-
-
 
 
 @swagger_auto_schema(operation_description="for users to place order they must be loged in",method='get',
