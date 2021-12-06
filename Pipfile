@@ -9,6 +9,7 @@ django-cors-headers = "*"
 psycopg2 = "*"
 drf-yasg = "*"
 pyyaml = "*"
+django-crontab = "*"
 
 [dev-packages]
 

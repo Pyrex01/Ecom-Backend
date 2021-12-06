@@ -39,11 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
+    'django_crontab',
     'corsheaders',
     'userManagement.apps.UsermanagementConfig',
     'store.apps.StoreConfig',
     'addressCollection.apps.AddresscollectionConfig',
-    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +156,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = "shopingbazar"
+
+CRONJOBS = [
+    ('*/1 * * * *', 'userManagement.cron.delete_unverified_user')
+]
