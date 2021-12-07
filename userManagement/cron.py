@@ -9,7 +9,7 @@ def delete_unverified_user():
     users = UnVerifiedUser.objects.all()
     print("|cronjob| delete unvierified users fired")
     for user in users:
-        expression = timedelta(minute=5)>datetime.now()-user.Generated_Date
+        expression = user.Generated_Date.utcnow() < datetime.datetime.now().utcnow()-datetime.timedelta(minutes=3)
         print(expression)
         if expression :
             user.delete()

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager ,AbstractBaseUser , PermissionsMixin
 import uuid
-
+import datetime
 
 class MyUserManager(BaseUserManager):
     def create_user(self, **kwargs):
@@ -63,6 +63,3 @@ class UnVerifiedUser(models.Model):
     OTP = models.CharField(max_length=6)
     Generated_Date = models.DateTimeField(auto_now_add=True)
     Phone = models.CharField(max_length=13)
-    
-    def __str__(self):
-        return self.First_Name
