@@ -55,7 +55,7 @@ def signup(request):
     manual_parameters=[ 
         Parameter("token","in request","token that recieved while signing up",type="UUID | string",required=True),
         Parameter("otp","in request","otp that has been mailed taken from user",type="integer | string",required=True)],
-    responses={202:"user has been verified",400:"eithor of requiered paramenters missing or wrong request"})
+    responses={202:"user has been verified",400:"eithor of requiered paramenters missing or wrong request",410:"otp expired",404:"unvierified user got deleted or it never existed"})
 @api_view(['POST'])
 def confirmOTP(request):
     try:
@@ -66,6 +66,9 @@ def confirmOTP(request):
         cuser.save()
         user.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
+
+    except UnVerifiedUser.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     except KeyError as e:
         return Response(data={"wrong info"},status=status.HTTP_400_BAD_REQUEST)
 
