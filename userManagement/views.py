@@ -12,7 +12,7 @@ from django.utils.html import strip_tags
 from .models import *
 from drf_yasg.utils import swagger_auto_schema
 import random
-import datetime
+from datetime import datetime
 
 
 @swagger_auto_schema(
@@ -60,8 +60,8 @@ def signup(request):
 def confirmOTP(request):
     try:
         user = UnVerifiedUser.objects.get(id=request.data["token"],OTP=request.data["otp"])
-        # if datetime.datetime(minute=5)>datetime.now()-user.Generated_Date:
-        #     return Response(status=status.HTTP_410_GONE)
+        if user.Generated_Date.minute + 2 < datetime.now().minute:
+            return Response(status=status.HTTP_410_GONE)
         cuser = Users(First_Name=user.First_Name,Second_Name=user.Second_Name,Email=user.Email,Gender=user.Gender,Photo=user.Photo,password=user.password)
         cuser.save()
         user.delete()
