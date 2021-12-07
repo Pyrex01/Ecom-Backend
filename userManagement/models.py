@@ -63,3 +63,6 @@ class UnVerifiedUser(models.Model):
     OTP = models.CharField(max_length=6)
     Generated_Date = models.DateTimeField(auto_now_add=True)
     Phone = models.CharField(max_length=13)
+        
+    def __str__(self):
+        return self.First_Name
