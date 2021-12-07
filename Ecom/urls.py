@@ -5,7 +5,7 @@ from drf_yasg import openapi
 ...
 
 from django.contrib import admin
-from django.urls import path , include
+from django.urls import path , include , re_path
 
 
 schema_view = get_schema_view(
@@ -21,7 +21,7 @@ schema_view = get_schema_view(
 )
 urlpatterns = [
    path('admin/', admin.site.urls),
-   path("docs(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name='schema-json'),
+   re_path(r"docs(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name='schema-json'),
    path("docs/", schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
    path("user/",include("userManagement.urls")),
    path("store/",include("store.urls")),
