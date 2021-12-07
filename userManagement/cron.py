@@ -13,5 +13,5 @@ def delete_unverified_user():
         print("user data", user.Generated_Date.utcnow())
         print("now date", datetime.now().utcnow())
         
-        if user.Generated_Date.utcnow() < datetime.now().utcnow():
+        if (user.Generated_Date.utcnow() + datetime(minute=3).utcnow()) < datetime.now().utcnow() :
             user.delete()
