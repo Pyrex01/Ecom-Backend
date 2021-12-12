@@ -4,6 +4,8 @@ from userManagement.models import Users
 
 class Address_types(models.Model):
     Address_type = models.CharField(max_length=15)
+    def __str__(self):
+        return self.Address_type
 
 
 
@@ -58,3 +60,7 @@ class Address(models.Model):
     State = models.CharField(max_length=2,choices=STATES)
     Address_type_ID = models.ForeignKey(Address_types,on_delete=models.CASCADE)    
     User_ID = models.ForeignKey(Users,on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.User_ID.Email
