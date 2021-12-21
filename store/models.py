@@ -47,7 +47,8 @@ class Orders(models.Model):
     Order_date = models.DateField(auto_now_add=True)
     Quantity = models.IntegerField()
     Tracking_ID = models.CharField(max_length=20)
-    Address_ID = models.ForeignKey(Address,on_delete=models.CASCADE)
+    Shipping_Address = models.ForeignKey(Address,on_delete=models.CASCADE)
+    Billing_Address = models.ForeignKey(Address,on_delete=models.CASCADE,related_name="billing_address")
 
 
 class CompletedOrders(models.Model):

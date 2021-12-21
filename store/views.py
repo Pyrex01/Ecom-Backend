@@ -1,4 +1,5 @@
 from typing import Tuple
+from django.utils.datastructures import MultiValueDictKeyError
 from pkg_resources import require
 from rest_framework import status
 from rest_framework.generics import ListAPIView
@@ -71,7 +72,8 @@ def getItem(request):
 @swagger_auto_schema(operation_description="for users to place order they must be loged in",method='get',
 manual_parameters=[ Parameter("itemID","in request","item's id selected by user",type="integer",required=True),
                     Parameter("quantity","in request","how many amount of item by user to order",type="integer",required=True),
-                    Parameter("addressID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True)],
+                    Parameter("shippingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True),
+                    Parameter("billingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True)],
 responses={200:"order placed",400:"bad request or quantitiy is not that much"})
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -80,10 +82,16 @@ def doOrder(request):
     quantity = request.GET["quantity"]
     if item.Quantity < quantity:
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    address = request.GET["addressID"]
+    shipping = request.GET["shippingID"]
+    billing = request.GET["billingID"]
+
     item.Quantity = item.Quantity = quantity
     item.save()
-    Orders(Items_ID=item,Customers_ID=request.user,Quantity=quantity,Tracking_ID=random.randint(222,999),Address_ID=Address.objects.get(pk=address)).save()
+    Orders(Items_ID=item,Customers_ID=request.user,
+    Quantity=quantity,Tracking_ID=random.randint(222,999),
+    Shipping_Address=Address.objects.get(pk=shipping),
+    Billing_Address=Address.objects.get(pk=billing),
+    ).save()
     return Response(status=status.HTTP_200_OK)
 
 
