@@ -73,13 +73,18 @@ def getItem(request):
 manual_parameters=[ Parameter("itemID","in request","item's id selected by user",type="integer",required=True),
                     Parameter("quantity","in request","how many amount of item by user to order",type="integer",required=True),
                     Parameter("shippingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True),
-                    Parameter("billingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True)],
+                    Parameter("billingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True),
+                    Parameter("First_Name","in request","receivers first name",type="integer",required=True),
+                    Parameter("Last_Name","in request","receivers last name",type="integer",required=True),
+                    Parameter("Phone_Number","in request","phone number of reciever",type="integer",required=True)],
 responses={200:"order placed",400:"bad request or quantitiy is not that much"})
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 def doOrder(request):
     item = Items.objects.get(pk=request.GET["itemID"])
     quantity = request.GET["quantity"]
+    First_Name = request.GET["First_Name"]
+    Phone_Number = request.GET["Phone_Number"]
     if item.Quantity < quantity:
         return Response(status=status.HTTP_400_BAD_REQUEST)
     shipping = request.GET["shippingID"]
@@ -87,10 +92,16 @@ def doOrder(request):
 
     item.Quantity = item.Quantity = quantity
     item.save()
-    Orders(Items_ID=item,Customers_ID=request.user,
-    Quantity=quantity,Tracking_ID=random.randint(222,999),
+    Orders(
+    Items_ID=item,
+    Customers_ID=request.user,
+    Quantity=quantity,
+    Tracking_ID=random.randint(222,999),
     Shipping_Address=Address.objects.get(pk=shipping),
     Billing_Address=Address.objects.get(pk=billing),
+    First_Name=First_Name,
+    Last_Name=Last_Name,
+    Phone_Number=Phone_Number
     ).save()
     return Response(status=status.HTTP_200_OK)
 

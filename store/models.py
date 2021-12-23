@@ -41,6 +41,9 @@ class Orders(models.Model):
         ('OD',"OUT FOR DELIVERY"),
         ('D',"DONE")
     ]
+    First_Name = models.CharField(max_length=20)
+    Last_Name = models.CharField(max_length=20)
+    Phone_Number = models.CharField(max_length=20)
     Items_ID = models.ForeignKey(Items,on_delete=models.CASCADE)
     Customers_ID = models.ForeignKey(Users,on_delete=models.CASCADE)
     Status = models.CharField(max_length=2,choices=STATUS,default='O')
