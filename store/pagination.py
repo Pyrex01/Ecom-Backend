@@ -9,7 +9,6 @@ class ListPage(PageNumberPagination):
     max_page_size = 10000
     def get_paginated_response(self, data):
         return Response(OrderedDict([
-             ('countItemsOnPage', self.page_size),
              ('current', self.page.number),
              ('next', self.get_next_link()),
              ('previous', self.get_previous_link()),
