@@ -6,7 +6,7 @@ from store.models import Items
 class ItemsInList(ModelSerializer):
     class Meta:
         model = Items
-        fields = ["Name","Price","Display_Image"]
+        fields = ["id","Name","Price","Display_Image"]
 
 
 class SingleItem(ModelSerializer):

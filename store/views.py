@@ -104,6 +104,3 @@ def doOrder(request):
     Phone_Number=Phone_Number
     ).save()
     return Response(status=status.HTTP_200_OK)
-
-
-
