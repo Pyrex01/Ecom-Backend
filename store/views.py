@@ -41,7 +41,8 @@ class getSortItems(ListAPIView):
         queryset = Items.objects.all()
         data = self.request.GET
         if "categories" in data.keys():
-            sub = Belongs.objects.get(Categorie_ID=data["categories"])
+            sub = Belongs.objects.filter(Categorie_ID=data["categories"])
+            print("sub",sub)
             queryset = queryset.filter(Belongs_ID__in=sub)
         if "sub_categorie"in data.keys():
             queryset = queryset.filter(Belongs_ID=data["sub_categorie"])
