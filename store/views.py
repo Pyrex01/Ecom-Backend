@@ -3,7 +3,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from pkg_resources import require
 from rest_framework import status
 from rest_framework.generics import ListAPIView
-from store.pagination import ListPage
+from store.pagination import ListPage ,ListPageSort
 from store.models import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action, api_view ,authentication_classes
@@ -22,7 +22,7 @@ class getSortItems(ListAPIView):
     queryset = Items.objects.all()
     queryset = queryset.exclude(Quantity=0)
     serializer_class = ItemsInList
-    pagination_class = ListPage
+    pagination_class = ListPageSort
 
     @swagger_auto_schema(method='get',
     operation_description="this is to get single item with all its detail to show user ",
