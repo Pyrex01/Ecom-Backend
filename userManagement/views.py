@@ -92,11 +92,11 @@ def login(request):
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-    except Exception as E:
-        return Response(data="wrong info",status=status.HTTP_403_FORBIDDEN)
-
     except KeyError as E:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as E:
+        return Response(data="wrong info",status=status.HTTP_403_FORBIDDEN)
 
 @swagger_auto_schema(
     method = 'post',
@@ -111,8 +111,8 @@ def logout(request):
     try:
         Token.objects.get(user = request.user).delete()
         return Response(status=status.HTTP_200_OK)
-    except Exception as E:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    except Token.DoesNotExist as E:
+        return Response(status=status.HTTP_404_NOT_FOUND)
         
 
 # mail.EmailMessage(subject="Django Otp verification",body='''<div style="flex:inline;"><h1>you have requested otp</h1> <div style="width:10px; height:10px;background:rgb(202, 235, 16);text:white"> 99999 </div> </div>''',from_email=EMAIL_HOST_USER,to=["khanshafique.ahamed@gmail.com"]).send(fail_silently=False)
