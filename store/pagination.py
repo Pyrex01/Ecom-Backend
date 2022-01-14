@@ -23,6 +23,16 @@ class ListPage(PageNumberPagination):
         if page_number == 1:
             return remove_query_param(url, self.page_query_param)
         return replace_query_param(url, self.page_query_param, page_number)
+    
+    def get_paginated_response(self, data):
+        return Response(OrderedDict([
+             ('current', self.page.number),
+             ('next', self.get_next_link()),
+             ('previous', self.get_previous_link()),
+             ('results', data)
+         ]))
+
+
 class ListPageSort(PageNumberPagination):
     page_size = 2
     page_size_query_param = 'page_size'
