@@ -109,8 +109,8 @@ def login(request):
 def logout(request):
     print(request)
     try:
-        print(request.user.pk)
-        Token.objects.get(user = request.user.pk).delete()
+        print(request.user.id)
+        Token.objects.get(user = request.user.id).delete()
         return Response(status=status.HTTP_200_OK)
     except Token.DoesNotExist as E:
         return Response(status=status.HTTP_404_NOT_FOUND)
