@@ -15,7 +15,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.openapi import Parameter
 
 class getItems(ListAPIView):
-    queryset = Items.objects.all()
+    queryset = Items.objects.all().order_by('?')
     serializer_class = ItemsInList
     pagination_class = ListPage
 class getSortItems(ListAPIView):
