@@ -40,6 +40,8 @@ class ListPageSort(PageNumberPagination):
     def get_next_link(self):
         data=self.request.GET
         url = self.request.build_absolute_uri('http://shopingbazar.sytes.net/store/getSortItems/?') 
+        if "searchString" in data.keys():
+            url+= "searchString="+data["searchString"]
         if("categories" in data.keys()):
             url += "categories="+data["categories"]
         if not self.page.has_next():

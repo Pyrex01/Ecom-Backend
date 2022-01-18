@@ -40,13 +40,16 @@ class getSortItems(ListAPIView):
     def get_queryset(self):
         queryset = Items.objects.all()
         data = self.request.GET
-        if "categories" in data.keys():
+        keys = data.keys()
+        if "searchString" in keys:
+            queryset = queryset.filter(Name__contains=data["searchString"])
+        if "categories" in keys:
             sub = Belongs.objects.filter(Categorie_ID=data["categories"])
             print("sub",sub)
             queryset = queryset.filter(Belongs_ID__in=sub)
-        if "sub_categorie"in data.keys():
+        if "sub_categorie"in keys:
             queryset = queryset.filter(Belongs_ID=data["sub_categorie"])
-        if "by_price" in data.keys():
+        if "by_price" in keys:
             if data["by_price"]==1:
                 queryset = queryset.order_by("Price")
             if data["by_price"]==-1:
@@ -55,11 +58,11 @@ class getSortItems(ListAPIView):
 
 
 @swagger_auto_schema(method='get',
-operation_description="this is to get single item with all its detail to show user ",
-manual_parameters= [Parameter('product_ID', "in request",'unique id of product slected by user to view', 
-type='interger')],
-require=True,
-responses={200:"returns product with all its details to show",400:"item does not exist"})
+    operation_description="this is to get single item with all its detail to show user ",
+    manual_parameters= [Parameter('product_ID', "in request",'unique id of product slected by user to view', 
+    type='interger')],
+    require=True,
+    responses={200:"returns product with all its details to show",400:"item does not exist"})
 @api_view(['GET'])
 def getItem(request):
     try:
@@ -71,20 +74,21 @@ def getItem(request):
 
 
 @swagger_auto_schema(operation_description="for users to place order they must be loged in",method='get',
-manual_parameters=[ Parameter("itemID","in request","item's id selected by user",type="integer",required=True),
-                    Parameter("quantity","in request","how many amount of item by user to order",type="integer",required=True),
-                    Parameter("shippingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True),
-                    Parameter("billingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True),
-                    Parameter("First_Name","in request","receivers first name",type="integer",required=True),
-                    Parameter("Last_Name","in request","receivers last name",type="integer",required=True),
-                    Parameter("Phone_Number","in request","phone number of reciever",type="integer",required=True)],
-responses={200:"order placed",400:"bad request or quantitiy is not that much"})
+    manual_parameters=[ Parameter("itemID","in request","item's id selected by user",type="integer",required=True),
+                        Parameter("quantity","in request","how many amount of item by user to order",type="integer",required=True),
+                        Parameter("shippingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True),
+                        Parameter("billingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True),
+                        Parameter("First_Name","in request","receivers first name",type="integer",required=True),
+                        Parameter("Last_Name","in request","receivers last name",type="integer",required=True),
+                        Parameter("Phone_Number","in request","phone number of reciever",type="integer",required=True)],
+    responses={200:"order placed",400:"bad request or quantitiy is not that much"})
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 def doOrder(request):
     item = Items.objects.get(pk=request.GET["itemID"])
     quantity = request.GET["quantity"]
     First_Name = request.GET["First_Name"]
+    Last_Name = request.GET["Last_Name"]
     Phone_Number = request.GET["Phone_Number"]
     if item.Quantity < quantity:
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -105,3 +109,4 @@ def doOrder(request):
     Phone_Number=Phone_Number
     ).save()
     return Response(status=status.HTTP_200_OK)
+
