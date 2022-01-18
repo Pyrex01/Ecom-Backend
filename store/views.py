@@ -15,7 +15,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.openapi import Parameter
 
 class getItems(ListAPIView):
-    queryset = Items.objects.all().order_by('?')
+    queryset = Items.objects.all()
     serializer_class = ItemsInList
     pagination_class = ListPage
 class getSortItems(ListAPIView):
@@ -42,7 +42,7 @@ class getSortItems(ListAPIView):
         data = self.request.GET
         keys = data.keys()
         if "searchString" in keys:
-            queryset = queryset.filter(Name__contains=data["searchString"])
+            queryset = queryset.filter(Name__icontains=data["searchString"])
         if "categories" in keys:
             sub = Belongs.objects.filter(Categorie_ID=data["categories"])
             print("sub",sub)
