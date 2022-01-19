@@ -7,6 +7,12 @@ from addressCollection.serializers import *
 from drf_yasg.utils import swagger_auto_schema
 from userManagement.models import Users
 from drf_yasg.openapi import Parameter
+
+
+
+
+
+
 @swagger_auto_schema(methods=['get'],
 operation_description="When user is loged in it returns all addresses of user",
 responses={200:"returns all the address user currently having",404:"user not loged in or user is not having any address"})
@@ -20,6 +26,12 @@ def getAddress(request):
         return Response(data=address.data,status=status.HTTP_200_OK)
     except Address.DoesNotExist as E:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+
 
 @swagger_auto_schema(methods=['post'],
 operation_description="send value here as mentioned to add users address on data base to order stuff",
