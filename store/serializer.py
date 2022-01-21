@@ -1,6 +1,6 @@
 from django.db.models.base import Model
 from rest_framework.serializers import ModelSerializer
-from store.models import Items
+from store.models import Cart, Items
 
 
 class ItemsInList(ModelSerializer):
@@ -12,4 +12,11 @@ class ItemsInList(ModelSerializer):
 class SingleItem(ModelSerializer):
     class Meta:
         model = Items
+        fields = "__all__"
+
+
+
+class CartItems(ModelSerializer):
+    class Meta:
+        model = Cart
         fields = "__all__"

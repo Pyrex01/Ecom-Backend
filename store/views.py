@@ -1,4 +1,5 @@
 from typing import Tuple
+from django.http import response
 from django.utils.datastructures import MultiValueDictKeyError
 from pkg_resources import require
 from rest_framework import status
@@ -8,11 +9,12 @@ from store.models import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action, api_view ,authentication_classes
 from rest_framework.response import Response
-from store.serializer import ItemsInList , SingleItem
+from store.serializer import CartItems, ItemsInList , SingleItem
 from addressCollection.models import Address
 import random
 from drf_yasg.utils import swagger_auto_schema 
 from drf_yasg.openapi import Parameter
+from django.db.models import F
 
 class getItems(ListAPIView):
     queryset = Items.objects.all()
@@ -110,3 +112,32 @@ def doOrder(request):
     ).save()
     return Response(status=status.HTTP_200_OK)
 
+
+
+@swagger_auto_schema(operation_description="users must be logged in to get cart items for that user must send signup token in header",
+method='get',responses={200:"returns item in list format",500:"something went wrong",401:"un authorized token not recieved"})
+@api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+def getItemsInCart(request):
+    print(request.user,"this is our user")
+    listOfItems = Cart.objects.filter(User_ID=request.user.id)
+    items = Items.objects.filter(id__in=listOfItems)
+    serialized = ItemsInList(items,many=True)
+    return Response(data=serialized.data,status=status.HTTP_200_OK)
+
+
+
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+def checkOUtCart(request):
+    listOfItems=request.GET["Itemsdetail"]
+    items = Items.objects.filter(id__in=listOfItems["id"])
+    availableItems=items.filter(Quantity__gt=0)
+    notAvailable = items.exclude(availableItems)
+    if notAvailable.count() > 0 :
+        serilezed = ItemsInList(notAvailable,many=True)
+        data={"notavailable_Items":serilezed.data,
+                "msg":"these items not available"}
+        return Response(data=data,status=status.HTTP_206_PARTIAL_CONTENT)
+    serilized = ItemsInList(availableItems,many=True)
+    availableItems.update()

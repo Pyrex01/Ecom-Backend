@@ -6,5 +6,6 @@ urlpatterns = [
     path("getSortItems/",getSortItems.as_view()),
     path("getitem/",getItem,name="single Item"),
     path("order/",doOrder,name="order taken here"),
+    path("getItemsInCart/",getItemsInCart,name="all items in user cart")
 
 ]
