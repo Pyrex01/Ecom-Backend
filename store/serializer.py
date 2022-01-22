@@ -17,6 +17,9 @@ class SingleItem(ModelSerializer):
 
 
 class CartItems(ModelSerializer):
+    Items_ID = ItemsInList()
     class Meta:
         model = Cart
-        fields = "__all__"
+        fields = ["Quantity","Items_ID"]
+
+

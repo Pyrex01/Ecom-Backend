@@ -27,7 +27,7 @@ class Items(models.Model):
 
 class Cart(models.Model):
     User_ID = models.ForeignKey(Users,on_delete=models.CASCADE)
-    Items_ID = models.ForeignKey(Items,on_delete=models.CASCADE)
+    Items_ID = models.ForeignKey(Items,on_delete=models.CASCADE,related_name="itemsID")
     Quantity = models.IntegerField()
 
 class Wish_List(models.Model):

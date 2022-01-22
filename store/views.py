@@ -119,10 +119,8 @@ method='get',responses={200:"returns item in list format",500:"something went wr
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 def getItemsInCart(request):
-    print(request.user,"this is our user")
     listOfItems = Cart.objects.filter(User_ID=request.user.id)
-    items = Items.objects.filter(id__in=listOfItems)
-    serialized = ItemsInList(items,many=True)
+    serialized = CartItems(listOfItems,many=True)
     return Response(data=serialized.data,status=status.HTTP_200_OK)
 
 
@@ -141,3 +139,16 @@ def checkOUtCart(request):
         return Response(data=data,status=status.HTTP_206_PARTIAL_CONTENT)
     serilized = ItemsInList(availableItems,many=True)
     availableItems.update()
+
+
+
+
+@swagger_auto_schema(operation_description="for users to place order they must be loged in",method='get',
+    manual_parameters=[ Parameter("itemID","in request","item's id selected by user",type="integer",required=True),
+                        Parameter("quantity","in request","item's id selected by user",type="integer",required=True),],
+    responses={200:"order placed",400:"bad request or quantitiy is not that much"})
+@api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+def addtoCart(request):
+    Cart(User_ID=request.user.id,Items_ID=request.GET["itemID"],Quantity=request.GET["quantity"]).save()
+    return Response(status=status.HTTP_200_OK)
