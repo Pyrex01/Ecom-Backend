@@ -1,4 +1,6 @@
+from os import stat
 from drf_yasg.openapi import Parameter
+from inflection import parameterize
 from rest_framework.decorators import api_view , authentication_classes
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
@@ -115,5 +117,19 @@ def logout(request):
     except Token.DoesNotExist as E:
         return Response(status=status.HTTP_404_NOT_FOUND)
         
+
+
+@swagger_auto_schema(method='get',operation_description="send users complain to this url" , manual_parameters=[
+    Parameter("description","in requst","users description here",True,type="string"),
+    Parameter("title","in request","titile of description that problem is releted to more like subject in mail",True,type="string")],
+    responses={200:"success fully complaint",400:"bad request",500:"something went wrong in server"})
+@api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+def getComplaint(request):
+    Complaints(User=request.user,Description=request.GET["description"],Title=request.GET["title"]).save()
+    return Response(status=status.HTTP_200_OK)
+
+
+
 
 # mail.EmailMessage(subject="Django Otp verification",body='''<div style="flex:inline;"><h1>you have requested otp</h1> <div style="width:10px; height:10px;background:rgb(202, 235, 16);text:white"> 99999 </div> </div>''',from_email=EMAIL_HOST_USER,to=["khanshafique.ahamed@gmail.com"]).send(fail_silently=False)

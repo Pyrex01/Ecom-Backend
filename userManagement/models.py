@@ -66,3 +66,9 @@ class UnVerifiedUser(models.Model):
         
     def __str__(self):
         return self.First_Name
+
+
+class Complaints(models.Model):
+    Title = models.CharField(max_length=60)
+    Description = models.TextField()
+    User = models.ForeignKey(Users,on_delete=models.CASCADE)
