@@ -8,4 +8,6 @@ urlpatterns = [
     path("order/",doOrder,name="order taken here"),
     path("getItemsInCart/",getItemsInCart,name="all items in user cart"),
     path("setItemsInCart/",addtoCart,name="all items in user cart"),
+    path("getallOrders/",getOrders,name="all items in user cart"),
+    path("checkout/",checkOUtCart,name="all items in user cart"),
 ]

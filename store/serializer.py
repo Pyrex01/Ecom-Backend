@@ -1,7 +1,6 @@
-from django.db.models.base import Model
 from rest_framework.serializers import ModelSerializer
-from store.models import Cart, Items
-
+from store.models import Cart, Items, Orders
+from addressCollection.serializers import AdressSerialized
 
 class ItemsInList(ModelSerializer):
     class Meta:
@@ -22,4 +21,10 @@ class CartItems(ModelSerializer):
         model = Cart
         fields = ["Quantity","Items_ID"]
 
-
+class orderSerializer(ModelSerializer):
+    Items_ID = ItemsInList()
+    Shipping_Address = AdressSerialized()
+    Billing_Address = AdressSerialized()
+    class Meta:
+        model = Orders
+        fields = ["Status","First_Name","Last_Name","Phone_Number","Items_ID","Order_date","Quantity","Tracking_ID","Shipping_Address","Billing_Address"]

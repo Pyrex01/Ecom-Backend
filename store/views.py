@@ -9,7 +9,7 @@ from store.models import *
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action, api_view ,authentication_classes
 from rest_framework.response import Response
-from store.serializer import CartItems, ItemsInList , SingleItem
+from store.serializer import CartItems, ItemsInList , SingleItem, orderSerializer
 from addressCollection.models import Address
 import random
 from drf_yasg.utils import swagger_auto_schema 
@@ -75,7 +75,7 @@ def getItem(request):
         return Response(status=404)
 
 
-@swagger_auto_schema(operation_description="for users to place order they must be loged in",method='get',
+@swagger_auto_schema(operation_description="for users to place order they must be loged in",method='post',
     manual_parameters=[ Parameter("itemID","in request","item's id selected by user",type="integer",required=True),
                         Parameter("quantity","in request","how many amount of item by user to order",type="integer",required=True),
                         Parameter("shippingID","in request","out of all user addresses whatever user selects its ID",type="integer",required=True),
@@ -84,18 +84,18 @@ def getItem(request):
                         Parameter("Last_Name","in request","receivers last name",type="integer",required=True),
                         Parameter("Phone_Number","in request","phone number of reciever",type="integer",required=True)],
     responses={200:"order placed",400:"bad request or quantitiy is not that much"})
-@api_view(['GET'])
+@api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 def doOrder(request):
-    item = Items.objects.get(pk=request.GET["itemID"])
-    quantity = request.GET["quantity"]
-    First_Name = request.GET["First_Name"]
-    Last_Name = request.GET["Last_Name"]
-    Phone_Number = request.GET["Phone_Number"]
+    item = Items.objects.get(pk=request.POST["itemID"])
+    quantity = request.POST["quantity"]
+    First_Name = request.POST["First_Name"]
+    Last_Name = request.POST["Last_Name"]
+    Phone_Number = request.POST["Phone_Number"]
     if item.Quantity < quantity:
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    shipping = request.GET["shippingID"]
-    billing = request.GET["billingID"]
+    shipping = request.POST["shippingID"]
+    billing = request.POST["billingID"]
 
     item.Quantity = item.Quantity = quantity
     item.save()
@@ -124,21 +124,42 @@ def getItemsInCart(request):
     return Response(data=serialized.data,status=status.HTTP_200_OK)
 
 
-
+@swagger_auto_schema(operation_description="complete check out of cart list",method='post',
+    manual_parameters=[
+        Parameter("first_name","in request",required=True,type="string"),
+        Parameter("last_name","in request",required=True,type="string"),
+        Parameter("Phone_number","in request",required=True,type="string"),
+        Parameter("shipping_address_id","in request",required=True,type="string|integer"),
+        Parameter("billing_address_id","in request",required=True,type="string|integer"),
+    ],
+    responses={202:"all orders places success fully",404:"some items not available in that quantity or items id wrong",400:"bad request",500:"something went wrong with server"}
+)
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 def checkOUtCart(request):
-    listOfItems=request.GET["Itemsdetail"]
-    items = Items.objects.filter(id__in=listOfItems["id"])
-    availableItems=items.filter(Quantity__gt=0)
-    notAvailable = items.exclude(availableItems)
-    if notAvailable.count() > 0 :
-        serilezed = ItemsInList(notAvailable,many=True)
-        data={"notavailable_Items":serilezed.data,
-                "msg":"these items not available"}
-        return Response(data=data,status=status.HTTP_206_PARTIAL_CONTENT)
-    serilized = ItemsInList(availableItems,many=True)
-    availableItems.update()
+    first_name = request.POST["first_name"]
+    last_name = request.POST["last_name"]
+    Phone_number = request.POST["Phone_number"]
+    shipping_address = request.POST["shipping_address_id"]
+    billing_address = request.POST["billing_address_id"]
+    allItems = Cart.objects.filter(User_ID=request.user.id)
+    for item in allItems:
+        SingleItem = Items.objects.get(pk=item.Items_ID)
+        if (SingleItem.Quantity - item.Quantity) < 0:
+            return Response(data={"items not available in that quantitiy":SingleItem.Name},status=status.HTTP_404_NOT_FOUND)
+        Orders(First_Name=first_name,
+        Last_Name=last_name,
+        Phone_Number=Phone_number,
+        Items_ID=item.Items_ID,
+        Customers_ID=request.user.id,
+        Quantity=item.Quantity,Tracking_ID=random.randint(999999,9999999999),
+        Shipping_Address=Address.objects.get(pk=shipping_address),
+        Billing_Address=Address.objects.get(pk=billing_address)).save()
+        SingleItem.Quantity -= item.Quantity
+        SingleItem.save()
+        item.Delete()
+    return Response(status=status.HTTP_202_ACCEPTED)
+    
 
 
 
@@ -152,3 +173,14 @@ def checkOUtCart(request):
 def addtoCart(request):
     Cart(User_ID=request.user.id,Items_ID=request.GET["itemID"],Quantity=request.GET["quantity"]).save()
     return Response(status=status.HTTP_200_OK)
+
+
+
+@swagger_auto_schema(operation_description="get all the orders done by users here user must be logged in thourgh and sent token through header",
+method='get',responses={200:"all items will be sent of orders",500:"something went wrong with server",400:"bad request",403:"not authenticated"})
+@api_view(["GET"])
+@authentication_classes([TokenAuthentication])
+def getOrders(request):
+    orders = Orders.objects.filter(Customers_ID=request.user.id)
+    serislizedOrder = orderSerializer(orders,many=True)
+    return Response(data=serislizedOrder.data,status=status.HTTP_200_OK)
