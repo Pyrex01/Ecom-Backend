@@ -174,7 +174,7 @@ def checkOUtCart(request):
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 def addtoCart(request):
-    Cart(User_ID=Users.objects.get(request.user.id),Items_ID=request.GET["itemID"],Quantity=request.GET["quantity"]).save()
+    Cart(User_ID=Users.objects.get(pk=request.user.id),Items_ID=request.GET["itemID"],Quantity=request.GET["quantity"]).save()
     return Response(status=status.HTTP_200_OK)
 
 
