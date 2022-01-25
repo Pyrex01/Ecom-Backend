@@ -19,7 +19,7 @@ class CartItems(ModelSerializer):
     Items_ID = ItemsInList()
     class Meta:
         model = Cart
-        fields = ["Quantity","Items_ID"]
+        fields = ["id","Quantity","Items_ID"]
 
 class orderSerializer(ModelSerializer):
     Items_ID = ItemsInList()
