@@ -202,7 +202,7 @@ responses={202:"quantitiy updated",400:"bad request",500:"something went wrong w
 def changeQuantitiy(request):
     cart_ID =request.data["cartID"]
     quantiy =request.data["quantity"]
-    cart = Cart.objects.get(User_ID=request.user.id,pk=Cart.objects.get(pk=cart_ID))
+    cart = Cart.objects.get(User_ID=request.user.id,pk=cart_ID)
     cart.Quantity = quantiy
     cart.save()
     return Response(status=status.HTTP_202_ACCEPTED)
