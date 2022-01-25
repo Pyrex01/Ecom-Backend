@@ -119,14 +119,14 @@ def logout(request):
         
 
 
-@swagger_auto_schema(method='get',operation_description="send users complain to this url" , manual_parameters=[
+@swagger_auto_schema(method='post',operation_description="send users complain to this url" , manual_parameters=[
     Parameter("description","in requst","users description here",True,type="string"),
     Parameter("title","in request","titile of description that problem is releted to more like subject in mail",True,type="string")],
     responses={200:"success fully complaint",400:"bad request",500:"something went wrong in server"})
-@api_view(["GET"])
+@api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 def getComplaint(request):
-    Complaints(User=request.user,Description=request.GET["description"],Title=request.GET["title"]).save()
+    Complaints(User=request.user,Description=request.data["description"],Title=request.data["title"]).save()
     return Response(status=status.HTTP_200_OK)
 
 
