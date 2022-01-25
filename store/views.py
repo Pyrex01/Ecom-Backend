@@ -149,7 +149,7 @@ def checkOUtCart(request):
     for cart in allCart:
         
         if (cart.Items_ID.Quantity-cart.Quantity) < 0:
-            return Response(data={"items not available in that quantitiy":SingleItem.Name},status=status.HTTP_404_NOT_FOUND)
+            return Response(data={"items not available in that quantitiy":cart.Items_ID.Name},status=status.HTTP_404_NOT_FOUND)
         Orders(First_Name=first_name,
         Last_Name=last_name,
         Phone_Number=Phone_number,
