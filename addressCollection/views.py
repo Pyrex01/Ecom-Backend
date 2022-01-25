@@ -22,7 +22,6 @@ def getAddress(request):
     try:
         address = Address.objects.filter(User_ID=request.user)
         address = AdressSerialized(address,many=True)
-        print(address.data,"====================================================")
         return Response(data=address.data,status=status.HTTP_200_OK)
     except Address.DoesNotExist as E:
         return Response(status=status.HTTP_404_NOT_FOUND)
