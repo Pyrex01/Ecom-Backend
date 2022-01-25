@@ -153,7 +153,7 @@ def checkOUtCart(request):
         Orders(First_Name=first_name,
         Last_Name=last_name,
         Phone_Number=Phone_number,
-        Items_ID=Items.objects.get(pk=item.Items_ID),
+        Items_ID=item.Items_ID,
         Customers_ID=request.user,
         Quantity=item.Quantity,Tracking_ID=random.randint(999999,9999999999),
         Shipping_Address=Address.objects.get(pk=shipping_address),
