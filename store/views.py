@@ -140,11 +140,11 @@ def getItemsInCart(request):
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 def checkOUtCart(request):
-    first_name = request.POST["first_name"]
-    last_name = request.POST["last_name"]
-    Phone_number = request.POST["Phone_number"]
-    shipping_address = request.POST["shipping_address_id"]
-    billing_address = request.POST["billing_address_id"]
+    first_name = request.data["first_name"]
+    last_name = request.data["last_name"]
+    Phone_number = request.data["Phone_number"]
+    shipping_address = request.data["shipping_address_id"]
+    billing_address = request.data["billing_address_id"]
     allItems = Cart.objects.filter(User_ID=request.user.id)
     for item in allItems:
         SingleItem = Items.objects.get(pk=item.Items_ID)
@@ -200,8 +200,8 @@ responses={202:"quantitiy updated",400:"bad request",500:"something went wrong w
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 def changeQuantitiy(request):
-    cart_ID =request.POST["cartID"]
-    quantiy =request.POST["quantity"]
+    cart_ID =request.data["cartID"]
+    quantiy =request.data["quantity"]
     cart = Cart.objects.get(User_ID=request.user.id,pk=Cart.objects.get(pk=cart_ID))
     cart.Quantity = quantiy
     cart.save()
