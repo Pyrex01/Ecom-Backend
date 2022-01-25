@@ -177,7 +177,7 @@ def checkOUtCart(request):
 def addtoCart(request):
     try:
         cartob=Cart.objects.get(User_ID=request.user,Items_ID=Items.objects.get(pk=request.GET["itemID"]))
-        cartob.Quantity = cartob.Quantity + request.GET["quantity"]
+        cartob.Quantity = cartob.Quantity + int(request.GET["quantity"])
         cartob.save()
         return Response(status=status.HTTP_200_OK)
     except Cart.DoesNotExist:
