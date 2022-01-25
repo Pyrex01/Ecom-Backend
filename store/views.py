@@ -95,7 +95,7 @@ def doOrder(request):
     First_Name = request.data["First_Name"]
     Last_Name = request.data["Last_Name"]
     Phone_Number = request.data["Phone_Number"]
-    if item.Quantity < quantity:
+    if item.Quantity < int(quantity):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     shipping = request.data["shippingID"]
     billing = request.data["billingID"]
