@@ -90,15 +90,15 @@ def getItem(request):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 def doOrder(request):
-    item = Items.objects.get(pk=request.POST["itemID"])
-    quantity = request.POST["quantity"]
-    First_Name = request.POST["First_Name"]
-    Last_Name = request.POST["Last_Name"]
-    Phone_Number = request.POST["Phone_Number"]
+    item = Items.objects.get(pk=request.data["itemID"])
+    quantity = request.data["quantity"]
+    First_Name = request.data["First_Name"]
+    Last_Name = request.data["Last_Name"]
+    Phone_Number = request.data["Phone_Number"]
     if item.Quantity < quantity:
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    shipping = request.POST["shippingID"]
-    billing = request.POST["billingID"]
+    shipping = request.data["shippingID"]
+    billing = request.data["billingID"]
 
     item.Quantity = item.Quantity = quantity
     item.save()
