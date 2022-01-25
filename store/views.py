@@ -147,8 +147,8 @@ def checkOUtCart(request):
     billing_address = request.data["billing_address_id"]
     allItems = Cart.objects.filter(User_ID=request.user.id)
     for item in allItems:
-        SingleItem = Items.objects.get(pk=item.Items_ID)
-        if (SingleItem.Quantity - item.Quantity) < 0:
+        
+        if (item.Quantity - item.Items_ID.Quantity) < 0:
             return Response(data={"items not available in that quantitiy":SingleItem.Name},status=status.HTTP_404_NOT_FOUND)
         Orders(First_Name=first_name,
         Last_Name=last_name,
@@ -158,8 +158,8 @@ def checkOUtCart(request):
         Quantity=item.Quantity,Tracking_ID=random.randint(999999,9999999999),
         Shipping_Address=Address.objects.get(pk=shipping_address),
         Billing_Address=Address.objects.get(pk=billing_address)).save()
-        SingleItem.Quantity -= item.Quantity
-        SingleItem.save()
+        item.Items_ID.Quantity -= item.Quantity
+        item.Items_ID.save()
         item.Delete()
     return Response(status=status.HTTP_202_ACCEPTED)
     
