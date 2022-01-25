@@ -145,22 +145,23 @@ def checkOUtCart(request):
     Phone_number = request.data["Phone_number"]
     shipping_address = request.data["shipping_address_id"]
     billing_address = request.data["billing_address_id"]
-    allItems = Cart.objects.filter(User_ID=request.user.id)
-    for item in allItems:
+    allCart = Cart.objects.filter(User_ID=request.user.id)
+    for cart in allCart:
         
-        if (item.Quantity - item.Items_ID.Quantity) < 0:
+        if (cart.Items_ID.Quantity-cart.Quantity) < 0:
             return Response(data={"items not available in that quantitiy":SingleItem.Name},status=status.HTTP_404_NOT_FOUND)
         Orders(First_Name=first_name,
         Last_Name=last_name,
         Phone_Number=Phone_number,
-        Items_ID=item.Items_ID,
+        Items_ID=cart.Items_ID,
         Customers_ID=request.user,
-        Quantity=item.Quantity,Tracking_ID=random.randint(999999,9999999999),
+        Quantity=cart.Quantity,
+        Tracking_ID=random.randint(999999,9999999999),
         Shipping_Address=Address.objects.get(pk=shipping_address),
         Billing_Address=Address.objects.get(pk=billing_address)).save()
-        item.Items_ID.Quantity -= item.Quantity
-        item.Items_ID.save()
-        item.Delete()
+        cart.Items_ID.Quantity -= cart.Quantity
+        cart.Items_ID.save()
+        cart.Delete()
     return Response(status=status.HTTP_202_ACCEPTED)
     
 
