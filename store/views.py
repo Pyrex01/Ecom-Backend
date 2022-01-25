@@ -174,8 +174,14 @@ def checkOUtCart(request):
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 def addtoCart(request):
-    Cart(User_ID=Users.objects.get(pk=request.user.id),Items_ID=Items.objects.get(pk=request.GET["itemID"]),Quantity=request.GET["quantity"]).save()
-    return Response(status=status.HTTP_200_OK)
+    try:
+        cartob=Cart.objects.get(User_ID=request.user,Items_ID=Items.objects.get(pk=request.GET["itemID"]))
+        cartob.Quantity = cartob.Quantity + request.GET["quantity"]
+        cartob.save()
+        return Response(status=status.HTTP_200_OK)
+    except Cart.DoesNotExist:
+        Cart(User_ID=Users.objects.get(pk=request.user.id),Items_ID=Items.objects.get(pk=request.GET["itemID"]),Quantity=request.GET["quantity"]).save()
+        return Response(status=status.HTTP_200_OK)
 
 
 
