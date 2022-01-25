@@ -10,4 +10,5 @@ urlpatterns = [
     path("setItemsInCart/",addtoCart,name="all items in user cart"),
     path("getallOrders/",getOrders,name="all items in user cart"),
     path("checkout/",checkOUtCart,name="all items in user cart"),
+    path("updataQuantitiy/",changeQuantitiy,name="all items in user cart"),
 ]

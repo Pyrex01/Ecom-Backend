@@ -1,3 +1,4 @@
+from tokenize import Token
 from typing import Tuple
 from django.http import response
 from django.utils.datastructures import MultiValueDictKeyError
@@ -15,6 +16,8 @@ import random
 from drf_yasg.utils import swagger_auto_schema 
 from drf_yasg.openapi import Parameter
 from django.db.models import F
+from userManagement.models import *
+
 
 class getItems(ListAPIView):
     queryset = Items.objects.all()
@@ -171,7 +174,7 @@ def checkOUtCart(request):
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 def addtoCart(request):
-    Cart(User_ID=request.user.id,Items_ID=request.GET["itemID"],Quantity=request.GET["quantity"]).save()
+    Cart(User_ID=Users.objects.get(request.user.id),Items_ID=request.GET["itemID"],Quantity=request.GET["quantity"]).save()
     return Response(status=status.HTTP_200_OK)
 
 
@@ -184,3 +187,22 @@ def getOrders(request):
     orders = Orders.objects.filter(Customers_ID=request.user.id)
     serislizedOrder = orderSerializer(orders,many=True)
     return Response(data=serislizedOrder.data,status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(operation_description="update quantitiy in cart of user of single item",
+method='post',
+manual_parameters=[
+    Parameter("cartID","in POST",required=True,type="string|integer"),
+    Parameter("quantity","in POST",required=True,type="string|integer")
+],
+responses={202:"quantitiy updated",400:"bad request",500:"something went wrong with server"}
+)
+@api_view(["POST"])
+@authentication_classes([TokenAuthentication])
+def changeQuantitiy(request):
+    cart_ID =request.POST["cartID"]
+    quantiy =request.POST["quantity"]
+    cart = Cart.objects.get(User_ID=request.user.id,pk=cart_ID)
+    cart.Quantity = quantiy
+    cart.save()
+    return Response(status=status.HTTP_202_ACCEPTED)
