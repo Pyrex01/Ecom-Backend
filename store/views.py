@@ -161,7 +161,7 @@ def checkOUtCart(request):
         Billing_Address=Address.objects.get(pk=billing_address)).save()
         cart.Items_ID.Quantity -= cart.Quantity
         cart.Items_ID.save()
-        cart.Delete()
+        cart.delete()
     return Response(status=status.HTTP_202_ACCEPTED)
     
 
