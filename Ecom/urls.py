@@ -9,6 +9,10 @@ from django.urls import path , include , re_path
 admin.site.site_header = "Shoping Bazar DashBoard"
 admin.site.index_title = "Admin Panel"
 
+
+
+
+
 schema_view = get_schema_view(
    openapi.Info(
       title="SHOPING_BAZAR API",
