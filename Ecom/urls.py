@@ -11,7 +11,6 @@ schema_view = get_schema_view(
       default_version='v1',
       description="backend api for shoping bazar",
       contact=openapi.Contact(email="khanshafique.ahamed@gmail.com"),
-      license=openapi.License(name="BSD License"),
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),

@@ -37,7 +37,7 @@ class getSortItems(ListAPIView):
         Parameter('Price', "in request",'this is for sort by price possible option is -1 for low to high 1 for high to low ',type='integer'),
         ],
     require=True,
-    responses={200:"page of sorted products",404:"no product available with this sort",400:"bad request"})
+    responses={200:ItemsInList(many=True),404:"no product available with this sort",400:"bad request"})
     @action(methods=['get'],detail=False)
     def get(self,request,**kwargs):
         return super().get(request,**kwargs)
@@ -67,7 +67,7 @@ class getSortItems(ListAPIView):
     manual_parameters= [Parameter('product_ID', "in request",'unique id of product slected by user to view', 
     type='interger')],
     require=True,
-    responses={200:"returns product with all its details to show",400:"item does not exist"})
+    responses={200:SingleItem(many=True),400:"item does not exist"})
 @api_view(['GET'])
 def getItem(request):
     try:
@@ -118,7 +118,7 @@ def doOrder(request):
 
 
 @swagger_auto_schema(operation_description="users must be logged in to get cart items for that user must send signup token in header",
-method='get',responses={200:"returns item in list format",500:"something went wrong",401:"un authorized token not recieved"})
+method='get',responses={200:CartItems(many=True),500:"something went wrong",401:"un authorized token not recieved"})
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 def getItemsInCart(request):
@@ -187,7 +187,7 @@ def addtoCart(request):
 
 
 @swagger_auto_schema(operation_description="get all the orders done by users here user must be logged in thourgh and sent token through header",
-method='get',responses={200:"all items will be sent of orders",500:"something went wrong with server",400:"bad request",403:"not authenticated"})
+method='get',responses={200:orderSerializer(many=True),500:"something went wrong with server",400:"bad request",403:"not authenticated"})
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 def getOrders(request):

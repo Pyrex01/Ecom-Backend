@@ -15,7 +15,7 @@ from drf_yasg.openapi import Parameter
 
 @swagger_auto_schema(methods=['get'],
 operation_description="When user is loged in it returns all addresses of user",
-responses={200:"returns all the address user currently having",404:"user not loged in or user is not having any address"})
+responses={200:AdressSerialized(many=True),404:"user not loged in or user is not having any address"})
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 def getAddress(request):
