@@ -100,7 +100,7 @@ def doOrder(request):
     shipping = request.data["shippingID"]
     billing = request.data["billingID"]
 
-    item.Quantity = item.Quantity = quantity
+    item.Quantity -= quantity
     item.save()
     Orders(
     Items_ID=item,
@@ -181,7 +181,9 @@ def addtoCart(request):
         cartob.save()
         return Response(status=status.HTTP_200_OK)
     except Cart.DoesNotExist:
-        Cart(User_ID=Users.objects.get(pk=request.user.id),Items_ID=Items.objects.get(pk=request.GET["itemID"]),Quantity=request.GET["quantity"]).save()
+        Cart(User_ID=Users.objects.get(pk=request.user.id),
+        Items_ID=Items.objects.get(pk=request.GET["itemID"]),
+        Quantity=request.GET["quantity"]).save()
         return Response(status=status.HTTP_200_OK)
 
 
@@ -213,3 +215,4 @@ def changeQuantitiy(request):
     cart.Quantity = quantiy
     cart.save()
     return Response(status=status.HTTP_202_ACCEPTED)
+
