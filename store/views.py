@@ -34,6 +34,7 @@ class getSortItems(ListAPIView):
     manual_parameters= [
         Parameter('categories', "in request",'sort by categorie',type='string'),
         Parameter('sub_categorie', "in request",'sort by sub-categorie',type='string'),
+        Parameter('searchString', "in request",'it will search for anything that has that name in it and return',type='string'),
         Parameter('Price', "in request",'this is for sort by price possible option is -1 for low to high 1 for high to low ',type='integer'),
         ],
     require=True,
