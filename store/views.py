@@ -110,7 +110,7 @@ def doOrder(request):
     Last_Name=Last_Name,
     Phone_Number=Phone_Number
     ).save()
-    email = mail.send_mail("Confirmation for orders placed",f"hello {request.user.First_Name} the item you want to buy is successfully placed in order order--{item.Name}")
+    email = mail.send_mail("Confirmation for orders placed",f"hello {request.user.First_Name} the item you want to buy is successfully placed in order order--{item.Name}",EMAIL_HOST_USER,[request.user.Email])
     email.send(fail_silently=False)
     return Response(status=status.HTTP_200_OK)
 
