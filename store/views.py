@@ -110,7 +110,7 @@ def doOrder(request):
     Last_Name=Last_Name,
     Phone_Number=Phone_Number
     ).save()
-    email = mail.send_mail("Confirmation for orders placed",f"hello {request.user.First_Name} the item you want to buy is successfully placed in order order--{item.Name}",EMAIL_HOST_USER,[request.user.Email])
+    email = mail.send_mail("Confirmation for orders placed",f"hello {request.user.First_Name} the item you want to buy is successfully placed in order Item name--{item.Name}",EMAIL_HOST_USER,[request.user.Email])
     email.send(fail_silently=False)
     return Response(status=status.HTTP_200_OK)
 
@@ -145,8 +145,9 @@ def checkOUtCart(request):
     shipping_address = request.data["shipping_address_id"]
     billing_address = request.data["billing_address_id"]
     allCart = Cart.objects.filter(User_ID=request.user.id)
+    itemName=[]
     for cart in allCart:
-        
+        itemName.append(cart.Items_ID.Name)
         if (cart.Items_ID.Quantity-cart.Quantity) < 0:
             return Response(data={"items not available in that quantitiy":cart.Items_ID.Name},status=status.HTTP_404_NOT_FOUND)
         Orders(First_Name=first_name,
@@ -161,6 +162,8 @@ def checkOUtCart(request):
         cart.Items_ID.Quantity -= cart.Quantity
         cart.Items_ID.save()
         cart.delete()
+    email = mail.send_mail("Confirmation for orders placed",f"hello {request.user.First_Name} the items you want to buy is successfully placed in order .Items Name - -{itemName.map(lambda a : a)}",EMAIL_HOST_USER,[request.user.Email])
+    email.send(fail_silently=False)
     return Response(status=status.HTTP_202_ACCEPTED)
     
 
