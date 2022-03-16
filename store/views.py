@@ -1,8 +1,3 @@
-from tokenize import Token
-from typing import Tuple
-from django.http import response
-from django.utils.datastructures import MultiValueDictKeyError
-from pkg_resources import require
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from store.pagination import ListPage ,ListPageSort
@@ -17,7 +12,8 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.openapi import Parameter
 from django.db.models import F
 from userManagement.models import *
-
+from django.core import mail
+from django.conf.global_settings import EMAIL_HOST_USER
 
 class getItems(ListAPIView):
     queryset = Items.objects.all()
@@ -114,6 +110,8 @@ def doOrder(request):
     Last_Name=Last_Name,
     Phone_Number=Phone_Number
     ).save()
+    email = mail.send_mail("Confirmation for orders placed",f"hello {request.user.First_Name} the item you want to buy is successfully placed in order order--{item.Name}")
+    email.send(fail_silently=False)
     return Response(status=status.HTTP_200_OK)
 
 
