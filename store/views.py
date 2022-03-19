@@ -121,7 +121,7 @@ method='get',responses={200:CartItems(many=True),500:"something went wrong",401:
 @api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 def getItemsInCart(request):
-    listOfItems = Cart.objects.filter(User_ID=request.user.id,Quantity_gt=0)
+    listOfItems = Cart.objects.filter(User_ID=request.user.id,Quantity__gt=0)
     serialized = CartItems(listOfItems,many=True)
     return Response(data=serialized.data,status=status.HTTP_200_OK)
 
