@@ -8,14 +8,14 @@ class ListPage(PageNumberPagination):
     max_page_size = 10000
 
     def get_next_link(self):
-        url = self.request.build_absolute_uri('http://shopingbazar.sytes.net/store/getItems/') 
+        url = self.request.build_absolute_uri('http://apiservice.ddns.net/store/getItems/') 
         if not self.page.has_next():
             return None
         page_number = self.page.next_page_number()
         return replace_query_param(url, self.page_query_param, page_number)
     
     def get_previous_link(self):
-        url = self.request.build_absolute_uri('http://shopingbazar.sytes.net/store/getItems/')
+        url = self.request.build_absolute_uri('http://apiservice.ddns.net/store/getItems/')
         if not self.page.has_previous():
             return None
         page_number = self.page.previous_page_number()
@@ -39,7 +39,7 @@ class ListPageSort(PageNumberPagination):
 
     def get_next_link(self):
         data=self.request.GET
-        url = self.request.build_absolute_uri('http://shopingbazar.sytes.net/store/getSortItems/?') 
+        url = self.request.build_absolute_uri('http://apiservice.ddns.net/store/getSortItems/?') 
         if "searchString" in data.keys():
             url+= "searchString="+data["searchString"]
         if("categories" in data.keys()):
@@ -51,7 +51,7 @@ class ListPageSort(PageNumberPagination):
     
     def get_previous_link(self):
         data=self.request.GET
-        url = self.request.build_absolute_uri('http://shopingbazar.sytes.net/store/getSortItems/?') 
+        url = self.request.build_absolute_uri('http://apiservice.ddns.net/store/getSortItems/?') 
         if "searchString" in data.keys():
             url+= "searchString="+data["searchString"]
         if("categories" in data.keys()):
