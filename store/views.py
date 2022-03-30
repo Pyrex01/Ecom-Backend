@@ -97,7 +97,7 @@ def doOrder(request):
     shipping = request.data["shippingID"]
     billing = request.data["billingID"]
 
-    item.Quantity -= quantity
+    item.Quantity -= int(quantity)
     item.save()
     Orders(
     Items_ID=item,
