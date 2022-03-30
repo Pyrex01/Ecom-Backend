@@ -161,8 +161,7 @@ def checkOUtCart(request):
         cart.Items_ID.Quantity -= cart.Quantity
         cart.Items_ID.save()
         cart.delete()
-    email = mail.send_mail("Confirmation for orders placed",f"hello {request.user.First_Name} the items you want to buy is successfully placed in order .Items Name - -{itemName.map(lambda a : a)}",EMAIL_HOST_USER,[request.user.Email])
-    email.send(fail_silently=False)
+    email = mail.send_mail("Confirmation for orders placed",f"hello {request.user.First_Name} the items you want to buy is successfully placed in order .Items Name - -{itemName.map(lambda a : a)}",EMAIL_HOST_USER,[request.user.Email],fail_silently=False)
     return Response(status=status.HTTP_202_ACCEPTED)
     
 
